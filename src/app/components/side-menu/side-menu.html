@@ -1,0 +1,18 @@
+<aside class="menu-sidebar d-none d-lg-block">
+  <div class="logo">
+    <a routerLink="/products">
+      <img src="assets/images/logo.png" alt="Shopora" class="img-responsive" />
+    </a>
+  </div>
+  <div class="menu-sidebar-content js-scrollbar1">
+    <nav class="navbar-sidebar" aria-label="Product categories">
+      <ul class="list-unstyled navbar-list">
+        @for (category of categories; track category.id) {
+          <li>
+            <a [routerLink]="['/category', category.id]" routerLinkActive="active">{{ category.name }}</a>
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+</aside>
