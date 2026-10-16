@@ -4,6 +4,7 @@ import { SideMenu } from './components/side-menu/side-menu';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { Header } from './components/header/header';
+import { Footer } from './components/footer/footer';
 
 interface ChromeConfig {
   chrome?: boolean;   // all three at once
@@ -13,7 +14,7 @@ interface ChromeConfig {
 }
 
 @Component({
-  imports: [RouterOutlet, SideMenu, Header],
+  imports: [RouterOutlet, SideMenu, Header, Footer],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -35,7 +36,7 @@ export class App {
   private readonly chrome = computed(() => this.routeData().chrome ?? true);
   protected readonly showSidebar = computed(() => this.routeData().sidebar ?? this.chrome());
   protected readonly showHeader = computed(() => this.routeData().header ?? this.chrome());
-
+  protected readonly showFooter = computed(() => this.routeData().footer ?? this.chrome());
 }
 
 function deepestChild(route: ActivatedRoute): ActivatedRoute {
