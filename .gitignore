@@ -42,3 +42,11 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+.prettierrc
+.gitignore
+package-lock.json
+.editorconfig
+
+.env
+src/environments/environment.local.ts
