@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/ro
 import { SideMenu } from './components/side-menu/side-menu';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { Header } from './components/header/header';
 
 interface ChromeConfig {
   chrome?: boolean;   // all three at once
@@ -12,7 +13,7 @@ interface ChromeConfig {
 }
 
 @Component({
-  imports: [RouterOutlet, SideMenu],
+  imports: [RouterOutlet, SideMenu, Header],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
@@ -33,6 +34,7 @@ export class App {
 
   private readonly chrome = computed(() => this.routeData().chrome ?? true);
   protected readonly showSidebar = computed(() => this.routeData().sidebar ?? this.chrome());
+  protected readonly showHeader = computed(() => this.routeData().header ?? this.chrome());
 
 }
 
