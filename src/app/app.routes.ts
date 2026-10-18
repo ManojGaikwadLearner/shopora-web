@@ -10,4 +10,20 @@ export const routes: Routes = [
         path: 'product-list',
         loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
     },
+    {
+        path: 'category/:id',
+        loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
+    },
+    {
+        path: 'category',
+        loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
+    },
+    {
+        path: 'page-not-found',
+        loadComponent: () => import('./components/page-not-found/page-not-found').then(m => m.PageNotFound)
+    },
+    {
+        path: '**',
+        redirectTo: 'page-not-found',
+    },
 ];
