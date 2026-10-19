@@ -22,6 +22,10 @@ export const routes: Routes = [
         path: 'category',
         loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
     },
+        {
+        path: 'product/:id',
+        loadComponent: () => import('./features/product-details/product-details').then(m => m.ProductDetails)
+    },
     {
         path: 'page-not-found',
         loadComponent: () => import('./components/page-not-found/page-not-found').then(m => m.PageNotFound)

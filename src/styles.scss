@@ -725,6 +725,11 @@ table.table.table-bordered th{
 .detail-section{
     margin-top:60px
 }
+
+.detail-img {
+    width: 30%;
+}
+
 /**/
 
 /* 
@@ -929,6 +934,14 @@ footer ul li{
         -ms-flex-pack:justify;
         justify-content:space-between
     }
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 

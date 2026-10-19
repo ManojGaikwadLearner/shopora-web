@@ -1,5 +1,20 @@
-<form class="form-header" (ngSubmit)="search(searchInput.value)">
-    <input #searchInput class="au-input au-input-xl" type="search" name="search"
-        placeholder="Search for products ..." aria-label="Search products" />
-    <button class="au-btn-submit" type="submit">Search</button>
+<form class="form-header" (submit)="submit($event)" role="search">
+  <input #searchInput
+         class="au-input au-input-xl"
+         type="search"
+         name="search"
+         placeholder="Search for products ..."
+         aria-label="Search products"
+         autocomplete="off"
+         [value]="keyword()"
+         (input)="onInput(searchInput.value)"
+         (keyup.escape)="clear(searchInput)" />
+
+  @if (keyword()) {
+    <button type="button" class="au-btn-clear" (click)="clear(searchInput)" aria-label="Clear search">
+      &times;
+    </button>
+  }
+
+  <button class="au-btn-submit" type="submit">Search</button>
 </form>

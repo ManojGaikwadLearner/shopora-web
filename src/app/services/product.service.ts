@@ -10,13 +10,21 @@ export class ProductService {
 
     httpClient: HttpClient = inject(HttpClient);
     private readonly baseUrl: string = '/api/products';
+    private readonly searchByCategoryIdUrl = (categoryId: number): string => `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+    private readonly searchByNameContainingUrl = (name: string): string => `${this.baseUrl}/search/findByNameContaining?name=${name}`;
     private readonly categoryUrl: string = '/api/product-category';
-    
-    constructor() {}
+    private readonly productUrl = (productId: number): string => `${this.baseUrl}/${productId}`;
 
-    getProducts(categoryId: number): Observable<Product[]> {
-        const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
-        return this.httpClient.get<GetResponseProduct>(searchUrl).pipe(
+    getProductsByCategoryId(categoryId: number): Observable<Product[]> {
+        return this.getProducts(this.searchByCategoryIdUrl(categoryId));
+    }
+
+    searchProducts(keyword: string): Observable<Product[]> {
+        return this.getProducts(this.searchByNameContainingUrl(keyword));
+    }
+
+    private getProducts(url: string): Observable<Product[]> {
+        return this.httpClient.get<GetResponseProduct>(url).pipe(
             map(response => response._embedded.products)
         );
     }
@@ -25,6 +33,10 @@ export class ProductService {
         return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
             map(response => response._embedded.productCategory)
         );
+    }
+
+    getProduct(productId: number): Observable<Product> {
+        return this.httpClient.get<Product>(this.productUrl(productId));
     }
 
 }
