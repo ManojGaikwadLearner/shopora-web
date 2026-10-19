@@ -8,15 +8,19 @@ export const routes: Routes = [
     },
     {
         path: 'product-list',
-        loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
+        loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
+    },
+    {
+        path: 'search/:keyword',
+        loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
     },
     {
         path: 'category/:id',
-        loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
+        loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
     },
     {
         path: 'category',
-        loadComponent: () => import('./components/product-list/product-list').then(m => m.ProductList)
+        loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
     },
     {
         path: 'page-not-found',

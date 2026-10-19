@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Product } from '../common/product';
-import { ProductCategory } from '../common/product-category';
+import { GetResponseProduct, GetResponseProductCategory } from './models/api-responses.model';
+import { Product } from './models/product.model';
+import { ProductCategory } from './models/product-cateory.model';
 
 @Service()
 export class ProductService {
@@ -26,16 +27,4 @@ export class ProductService {
         );
     }
 
-}
-
-interface GetResponseProduct {
-    _embedded: {
-        products: Product[];
-    }
-}
-
-interface GetResponseProductCategory {
-    _embedded: {
-        productCategory: ProductCategory[];
-    }
 }

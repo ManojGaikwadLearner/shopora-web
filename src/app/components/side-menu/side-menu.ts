@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { ProductCategory } from '../../common/product-category';
 import { ProductService } from '../../services/product.service';
+import { ProductCategory } from '../../services/models/product-cateory.model';
 
 @Component({
   selector: 'app-side-menu',
