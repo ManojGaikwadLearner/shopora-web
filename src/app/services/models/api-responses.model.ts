@@ -1,9 +1,15 @@
 import { ProductCategory } from "./product-cateory.model";
 import { Product } from "./product.model";
 
-export interface GetResponseProduct {
+export interface GetResponseProducts {
     _embedded: {
         products: Product[];
+    },
+    page : {
+        number: number;
+        size : number;
+        totalElements : number;
+        totalPages : number;
     }
 }
 

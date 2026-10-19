@@ -30,6 +30,12 @@
           }
 
         </div>
+        <div class="footer-pagination">
+          <ngb-pagination class="d-flex justify-content-end" [(page)]="thePageNumber"
+                        [pageSize]="thePageSize"
+                        [collectionSize]="theTotalElements"
+                        (pageChange)="pageChangeHandler($event)" />
+        </div>
     </div>
   </div>
 </div>
