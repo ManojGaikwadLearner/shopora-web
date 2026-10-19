@@ -7,9 +7,9 @@
   <div class="menu-sidebar-content js-scrollbar1">
     <nav class="navbar-sidebar" aria-label="Product categories">
       <ul class="list-unstyled navbar-list">
-        @for (category of categories; track category.id) {
+        @for (category of productCategories(); track category.id) {
           <li>
-            <a [routerLink]="['/category', category.id]" routerLinkActive="active-link">{{ category.name }}</a>
+            <a [routerLink]="['/category', category.id]" routerLinkActive="active-link">{{ category.categoryName }}</a>
           </li>
         }
       </ul>

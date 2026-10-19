@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ProductCategory } from '../../common/product-category';
+import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-side-menu',
@@ -8,10 +10,18 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './side-menu.scss',
 })
 export class SideMenu {
-  protected readonly categories = [
-    { id: 1, name: 'Books' },
-    { id: 2, name: 'Coffee Mugs' },
-    { id: 3, name: 'Mouse Pads' },
-    { id: 4, name: 'Luggage Tags' },
-  ];
+  productService: ProductService = inject(ProductService);
+
+  productCategories = signal<ProductCategory[]>([]);
+
+  ngOnInit() {
+    this.loadProductCategories();
+  }
+
+  private loadProductCategories() {
+    this.productService.getProductCategories().subscribe({
+      next: categories => this.productCategories.set(categories),
+      error: () => this.productCategories.set([]),
+    });
+  }
 }
