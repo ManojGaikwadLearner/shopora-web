@@ -2,11 +2,7 @@
   <div class="section-content section-content-p30">
     <div class="container-fluid">
       <div class="header-wrap">
-        <form class="form-header" (ngSubmit)="search(searchInput.value)">
-          <input #searchInput class="au-input au-input-xl" type="search" name="search"
-                 placeholder="Search for products ..." aria-label="Search products" />
-          <button class="au-btn-submit" type="submit">Search</button>
-        </form>
+        <app-search></app-search>
         <div class="cart-area d-n">
           <a routerLink="/cart">
             <div class="total">{{ cartTotal() | currency: 'USD' }} <span>{{ cartCount() }}</span></div>
