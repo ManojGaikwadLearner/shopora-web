@@ -8,6 +8,7 @@ import { Product } from '../../services/models/product.model';
 import { GetResponseProducts } from '../../services/models/api-responses.model';
 import { NgbPagination, NgbPaginationNext, NgbPaginationNumber, NgbPaginationPages, NgbPaginationPrevious } from '@ng-bootstrap/ng-bootstrap';
 import '@angular/localize/init';
+import { pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
 
 @Component({
   selector: 'app-product-list',
@@ -25,6 +26,8 @@ export class ProductList implements OnInit {
   
   currentCategoryId = 1;
   searchMode = false;
+
+  previousKeyword: string | null = '';
   
   thePageNumber: number = 1;
   thePageSize: number = 10;
@@ -46,8 +49,8 @@ export class ProductList implements OnInit {
     this.error.set(null);
 
     const request$ = this.searchMode
-      ? this.productService.searchProducts(keyword!)
-      : this.productService.getProductListPaginated(this.currentCategoryId, this.thePageNumber-1, this.thePageSize);
+      ? this.handleSearchProducts(keyword!)
+      : this.productService.getProductListPaginated(this.currentCategoryId, pageNumberFromUItoAPI(this.thePageNumber), this.thePageSize);
 
     return request$.pipe(
       catchError(() => {
@@ -57,9 +60,17 @@ export class ProductList implements OnInit {
     );
   }
 
+  private handleSearchProducts(keyword: string): Observable<GetResponseProducts> {
+    if (this.previousKeyword !== keyword) {
+      this.thePageNumber = 1;
+    }
+    this.previousKeyword = keyword;
+    return this.productService.searchProductsPaginated(keyword, pageNumberFromUItoAPI(this.thePageNumber), this.thePageSize);
+  }
+
   private successHandler(response: GetResponseProducts): void {
     this.products.set(response._embedded.products);
-    this.thePageNumber = response.page.number + 1;
+    this.thePageNumber =  pageNumberFromAPItoUI(response.page.number);
     this.thePageSize = response.page.size;
     this.theTotalElements = response.page.totalElements;
   }
