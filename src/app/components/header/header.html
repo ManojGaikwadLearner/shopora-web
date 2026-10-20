@@ -3,12 +3,7 @@
     <div class="container-fluid">
       <div class="header-wrap">
         <app-search></app-search>
-        <div class="cart-area d-n">
-          <a routerLink="/cart">
-            <div class="total">{{ cartTotal() | currency: 'USD' }} <span>{{ cartCount() }}</span></div>
-            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-          </a>
-        </div>
+        <app-cart-status></app-cart-status>
       </div>
       <div class="account-wrap"></div>
     </div>
