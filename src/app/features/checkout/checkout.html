@@ -1,0 +1,309 @@
+<div class="main-content page-m">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            
+                <fieldset formGroupName="customer" class="form-area">
+                    <h3>Customer</h3>
+                
+                    <div class="row">
+                        <div class="col-md-2"><label for="firstName">First name</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="firstName" type="text" formControlName="firstName" /> 
+                            </div> 
+                            <!-- @if (form.controls.customer.controls.firstName; as ctrl) {
+                            @if (ctrl.touched && ctrl.invalid) {
+                                    <p class="col-md-10 offset-md-2 field-error">
+                                    @if (ctrl.hasError('required')) { Enter your first name. }
+                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                                    </p>
+                            }
+                            } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="lastName">Last name</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="lastName" type="text" formControlName="lastName" />
+                            </div> 
+                        <!-- @if (form.controls.customer.controls.lastName; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter your last name. }
+                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="email">Email</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="email" type="email" formControlName="email" />
+                            </div> 
+                        <!-- @if (form.controls.customer.controls.email.touched && form.controls.customer.controls.email.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">Enter a valid email address.</p>
+                        } -->
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset formGroupName="shippingAddress" class="form-area">
+                    <h3>Shipping Address</h3>
+                
+                    <div class="row">
+                        <div class="col-md-2"><label for="country">Country</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="country"formControlName="country">
+                                    <option value="India">India</option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="street">Street</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="street" type="text" formControlName="street" /> 
+                            </div> 
+                            <!-- @if (form.controls.shippingAddress.controls.street; as ctrl) {
+                            @if (ctrl.touched && ctrl.invalid) {
+                                    <p class="col-md-10 offset-md-2 field-error">
+                                    @if (ctrl.hasError('required')) { Enter Street. }
+                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                                    </p>
+                            }
+                            } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="city">City</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="city" type="text" formControlName="city" />
+                            </div> 
+                        <!-- @if (form.controls.shippingAddress.controls.city; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter your City. }
+                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="state">State</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="state" formControlName="state">
+                                    <option value="Maharashtra">Maharashtra</option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="zipCode">Zip Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="zipCode" type="text" formControlName="zipCode" />
+                            </div> 
+                        <!-- @if (form.controls.shippingAddress.controls.zipCode; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter Zip Code. }
+                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Checkbox to copy Shipping Address to Billing Address -->
+                <div class="input-space">
+                    <label for="copyAddress" class="au-checkbox">
+                        <input type="checkbox" (change)="copyShippingAddressToBillingAddress($event)" name="copyAddress" id="copyAddress">
+                        <span class="au-checkmark"></span>Billing Address same as Shipping Address
+                    </label>
+                </div>
+
+                <fieldset formGroupName="billingAddress" class="form-area">
+                    <h3>Billing Address</h3>
+                
+                    <div class="row">
+                        <div class="col-md-2"><label for="country">Country</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="billingCountry" formControlName="country">
+                                    <option value="India">India</option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="street">Street</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="billingStreet" type="text" formControlName="street" /> 
+                            </div> 
+                            <!-- @if (form.controls.billingAddress.controls.street; as ctrl) {
+                            @if (ctrl.touched && ctrl.invalid) {
+                                    <p class="col-md-10 offset-md-2 field-error">
+                                    @if (ctrl.hasError('required')) { Enter Street. }
+                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                                    </p>
+                            }
+                            } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="city">City</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="billingCity" type="text" formControlName="city" />
+                            </div> 
+                        <!-- @if (form.controls.billingAddress.controls.city; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter your City. }
+                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="state">State</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="billingState" formControlName="state">
+                                    <option value="Maharashtra">Maharashtra</option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="zipCode">Zip Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="billingZipCode" type="text" formControlName="zipCode" />
+                            </div> 
+                        <!-- @if (form.controls.billingAddress.controls.zipCode; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter Zip Code. }
+                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset formGroupName="creditCard" class="form-area">
+                    <h3>Credit Card</h3>
+                
+                    <div class="row">
+                        <div class="col-md-2"><label for="country">Card Type</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="cardType" formControlName="cardType">
+                                    <option value="Visa">Visa</option>
+                                    <option value="Mastercard ">Mastercard </option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="street">Name on Card</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="nameOnCard" type="text" formControlName="nameOnCard" /> 
+                            </div> 
+                            <!-- @if (form.controls.creditCard.controls.street; as ctrl) {
+                            @if (ctrl.touched && ctrl.invalid) {
+                                    <p class="col-md-10 offset-md-2 field-error">
+                                    @if (ctrl.hasError('required')) { Enter Name. }
+                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
+                                    </p>
+                            }
+                            } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="cardNumber">Card Number</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="cardNumber" type="number" formControlName="cardNumber" />
+                            </div> 
+                        <!-- @if (form.controls.creditCard.controls.cardNumber; as ctrl) {
+                        @if (ctrl.touched && ctrl.invalid) {
+                            <p class="col-md-10 offset-md-2 field-error">
+                            @if (ctrl.hasError('required')) { Enter your Card Number. }
+                            @else if (ctrl.hasError('minlength')) { At least 16 digit. }
+                            </p>
+                        }
+                        } -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="secuirtyCode">Secuirty Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input id="secuirtyCode" type="number" formControlName="secuirtyCode" />
+                            <!-- @if (form.controls.creditCard.controls.secuirtyCode; as ctrl) {
+                            @if (ctrl.touched && ctrl.invalid) {
+                                <p class="col-md-10 offset-md-2 field-error">
+                                @if (ctrl.hasError('required')) { Enter your Security Code. }
+                                @else if (ctrl.hasError('minlength')) { At least 3 digit. }
+                                </p>
+                            }
+                            } -->
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="country">Expiration Month</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="expirationMonth" formControlName="expirationMonth">
+                                    <option value="01">01</option>
+                                    <option value="02 ">02 </option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"><label for="country">Expiration Year</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select id="expirationYear" formControlName="expirationYear">
+                                    <option value="2026">2026</option>
+                                    <option value="2027 ">2027</option>
+                                </select> 
+                            </div> 
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Order Details -->
+                <div class="form-area">
+                    <h3>Review Your Order</h3>
+                    <p>Total Quantity: {{ totalQuantity() }}</p>
+                    <p>Shipping: FREE</p>
+                    <p> Total Price: {{ totalPrice() | currency: 'USD' }}</p>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" [disabled]="submitting()" class="btn btn-info">Purchase</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
