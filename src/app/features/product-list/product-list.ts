@@ -8,7 +8,7 @@ import { Product } from '../../services/models/product.model';
 import { GetResponseProducts } from '../../services/models/api-responses.model';
 import { NgbPagination, NgbPaginationNext, NgbPaginationNumber, NgbPaginationPages, NgbPaginationPrevious } from '@ng-bootstrap/ng-bootstrap';
 import '@angular/localize/init';
-import { pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
+import { getCartItemFromProduct, pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../services/models/cart-item.model';
 
@@ -94,13 +94,7 @@ export class ProductList implements OnInit {
   }
 
   addToCart(product: Product): void {
-    const cartItem: CartItem = {
-      id: product.id,
-      name: product.name,
-      imageUrl: product.imageUrl,
-      unitPrice: product.unitPrice,
-      quantity: 1
-    };
+    const cartItem: CartItem = getCartItemFromProduct(product);
     this.cartService.addToCart(cartItem);
   }
 

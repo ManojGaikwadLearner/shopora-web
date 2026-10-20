@@ -5,6 +5,9 @@ import { Product } from '../../services/models/product.model';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { CartItem } from '../../services/models/cart-item.model';
+import { CartService } from '../../services/cart.service';
+import { getCartItemFromProduct } from '../../shared/utils/common.util';
 
 @Component({
   imports: [CommonModule,CurrencyPipe, RouterLink],
@@ -14,6 +17,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 })
 export class ProductDetails {
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -40,6 +44,14 @@ export class ProductDetails {
         return of({} as Product);
       }),
     );
+  }
+
+  addToCart(product: Product | null): void {
+    if (!product) {
+      return;
+    }
+    const cartItem: CartItem = getCartItemFromProduct(product);
+    this.cartService.addToCart(cartItem);
   }
 
 }
