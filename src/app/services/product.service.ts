@@ -13,6 +13,7 @@ export class ProductService {
     private readonly searchByCategoryIdUrl = (categoryId: number): string => `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
     private readonly productListPaginatedUrl = (categoryId: number, pageNumber: number, pageSize: number): string => `${this.searchByCategoryIdUrl(categoryId)}&page=${pageNumber}&size=${pageSize}`;
     private readonly searchByNameContainingUrl = (name: string): string => `${this.baseUrl}/search/findByNameContaining?name=${name}`;
+    private readonly searchByNameContainingPaginatedUrl = (name: string, pageNumber: number, pageSize: number): string => `${this.searchByNameContainingUrl(name)}&page=${pageNumber}&size=${pageSize}`;
     private readonly categoryUrl: string = '/api/product-category';
     private readonly productUrl = (productId: number): string => `${this.baseUrl}/${productId}`;
 
@@ -30,6 +31,10 @@ export class ProductService {
 
     getProductListPaginated(categoryId: number, thePageNumber: number, thePageSize: number): Observable<GetResponseProducts> {
         return this.httpClient.get<GetResponseProducts>(this.productListPaginatedUrl(categoryId, thePageNumber, thePageSize));
+    }
+
+    searchProductsPaginated(keyword: string, thePageNumber: number, thePageSize: number): Observable<GetResponseProducts> {
+        return this.httpClient.get<GetResponseProducts>(this.searchByNameContainingPaginatedUrl(keyword, thePageNumber, thePageSize));
     }
 
     getProductCategories(): Observable<ProductCategory[]> {

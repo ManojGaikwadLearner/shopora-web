@@ -71,5 +71,13 @@ export class ProductList implements OnInit {
       ).subscribe(response => this.successHandler(response));
   }
 
+  updatePageSize(pageSize: string): void {
+    this.thePageSize = +pageSize;
+    this.thePageNumber = 1;
+    this.loadProducts(this.route.snapshot.paramMap).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe(response => this.successHandler(response));
+  }
+
 }
 
