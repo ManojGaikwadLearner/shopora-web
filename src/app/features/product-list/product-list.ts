@@ -9,6 +9,8 @@ import { GetResponseProducts } from '../../services/models/api-responses.model';
 import { NgbPagination, NgbPaginationNext, NgbPaginationNumber, NgbPaginationPages, NgbPaginationPrevious } from '@ng-bootstrap/ng-bootstrap';
 import '@angular/localize/init';
 import { pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
+import { CartService } from '../../services/cart.service';
+import { CartItem } from '../../services/models/cart-item.model';
 
 @Component({
   selector: 'app-product-list',
@@ -18,6 +20,7 @@ import { pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils
 })
 export class ProductList implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly cartService = inject(CartService);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -88,6 +91,17 @@ export class ProductList implements OnInit {
     this.loadProducts(this.route.snapshot.paramMap).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe(response => this.successHandler(response));
+  }
+
+  addToCart(product: Product): void {
+    const cartItem: CartItem = {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.imageUrl,
+      unitPrice: product.unitPrice,
+      quantity: 1
+    };
+    this.cartService.addToCart(cartItem);
   }
 
 }

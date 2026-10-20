@@ -1,5 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   imports: [CurrencyPipe],
@@ -8,6 +9,14 @@ import { Component, signal } from '@angular/core';
   templateUrl: './cart-status.html',
 })
 export class CartStatus {
-  protected readonly cartTotal = signal(19.22);
-  protected readonly cartCount = signal(2);
+
+  cartService = inject(CartService);
+
+  protected readonly cartTotal = signal(0);
+  protected readonly cartCount = signal(0);
+
+  ngOnInit() {
+    this.cartService.totalPrice.asObservable().subscribe(updatedTotalPrice => this.cartTotal.set(updatedTotalPrice));
+    this.cartService.totalQuantity.asObservable().subscribe(updatedTotalQuantity => this.cartCount.set(updatedTotalQuantity));
+  }
 }
