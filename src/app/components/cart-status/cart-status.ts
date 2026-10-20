@@ -1,14 +1,15 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CartService } from '../../services/cart.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   selector: 'app-cart-status',
   styleUrl: './cart-status.scss',
   templateUrl: './cart-status.html',
 })
-export class CartStatus {
+export class CartStatus implements OnInit {
 
   cartService = inject(CartService);
 

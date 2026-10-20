@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
 import { Product } from '../../services/models/product.model';
@@ -15,7 +15,7 @@ import { getCartItemFromProduct } from '../../shared/utils/common.util';
   styleUrl: './product-details.scss',
   templateUrl: './product-details.html',
 })
-export class ProductDetails {
+export class ProductDetails implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
   private readonly route = inject(ActivatedRoute);

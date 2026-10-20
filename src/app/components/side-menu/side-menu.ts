@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { ProductCategory } from '../../services/models/product-cateory.model';
@@ -9,7 +9,7 @@ import { ProductCategory } from '../../services/models/product-cateory.model';
   templateUrl: './side-menu.html',
   styleUrl: './side-menu.scss',
 })
-export class SideMenu {
+export class SideMenu implements OnInit {
   productService: ProductService = inject(ProductService);
 
   productCategories = signal<ProductCategory[]>([]);

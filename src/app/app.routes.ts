@@ -22,9 +22,13 @@ export const routes: Routes = [
         path: 'category',
         loadComponent: () => import('./features/product-list/product-list').then(m => m.ProductList)
     },
-        {
+    {
         path: 'product/:id',
         loadComponent: () => import('./features/product-details/product-details').then(m => m.ProductDetails)
+    },
+    {
+        path: 'cart-details',
+        loadComponent: () => import('./features/cart-details/cart-details').then(m => m.CartDetails)
     },
     {
         path: 'page-not-found',
