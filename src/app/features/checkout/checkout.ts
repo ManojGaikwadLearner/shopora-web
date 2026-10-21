@@ -1,6 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AppFormService } from '../../services/app-form.service';
 
 @Component({
   selector: 'app-checkout',
@@ -9,12 +10,15 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   styleUrl: './checkout.scss',
 
 })
-export class Checkout {
+export class Checkout implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly appFormService: AppFormService = inject(AppFormService);
 
   protected readonly submitting = signal(false);
   totalPrice = signal<number>(0);
   totalQuantity = signal<number>(0);
+  creditCardMonths = signal<number[]>([]);
+  creditCardYears = signal<number[]>([]);
 
   protected readonly form = this.fb.nonNullable.group({
     customer: this.fb.nonNullable.group({
@@ -46,6 +50,30 @@ export class Checkout {
     }),
 
   });
+
+  ngOnInit(): void {
+    this.getCreditCardMonths();
+    this.getCreditCardYears();
+  }
+
+  getCreditCardMonths(startMonth = 1): void {
+    this.appFormService.getCreditCardMonths(startMonth).subscribe(months => this.creditCardMonths.set(months));
+  }
+
+  getCreditCardYears(): void {
+    this.appFormService.getCreditCardYears().subscribe(years => this.creditCardYears.set(years));
+  }
+
+  handleMonthsAndYears(): void {
+    const creditCardFormGroup = this.form.get('creditCard');
+
+    const currentYear: number = new Date().getFullYear();
+    const selectedYear: number = Number(creditCardFormGroup?.value?.expirationYear);
+
+    const startMonth: number = currentYear === selectedYear ? new Date().getMonth() + 1 : 1;
+    this.getCreditCardMonths(startMonth)
+
+  }
 
   copyShippingAddressToBillingAddress(event: any){
     if (event.target.checked) {
