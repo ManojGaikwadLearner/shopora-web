@@ -1,0 +1,34 @@
+<fieldset class="form-area" [formGroup]="group()">
+      <h3>{{ legend() }}</h3>
+
+      <app-field-row label="Country" [for]="idPrefix() + 'Country'" [control]="group().controls['country']">
+        <select [id]="idPrefix() + 'Country'" formControlName="country">
+          <option [ngValue]="null">Select a country</option>
+          @for (country of countries(); track country.id) {
+            <option [ngValue]="country">{{ country.name }}</option>
+          }
+        </select>
+      </app-field-row>
+
+      <app-field-row label="Street" [for]="idPrefix() + 'Street'" [control]="group().controls['street']">
+        <input [id]="idPrefix() + 'Street'" type="text" formControlName="street" autocomplete="street-address" />
+      </app-field-row>
+
+      <app-field-row label="City" [for]="idPrefix() + 'City'" [control]="group().controls['city']">
+        <input [id]="idPrefix() + 'City'" type="text" formControlName="city" />
+      </app-field-row>
+
+      <app-field-row label="State" [for]="idPrefix() + 'State'" [control]="group().controls['state']">
+        <select [id]="idPrefix() + 'State'" formControlName="state">
+          <option [ngValue]="null">Select a state</option>
+          @for (state of states(); track state.id) {
+            <option [ngValue]="state">{{ state.name }}</option>
+          }
+        </select>
+      </app-field-row>
+
+      <app-field-row label="Zip code" [for]="idPrefix() + 'ZipCode'" [control]="group().controls['zipCode']"
+                     [messages]="{ pattern: 'Enter a 6-digit PIN code.' }">
+        <input [id]="idPrefix() + 'ZipCode'" type="text" inputmode="numeric" formControlName="zipCode" />
+      </app-field-row>
+</fieldset>
