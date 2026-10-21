@@ -1,7 +1,9 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppFormService } from '../../services/app-form.service';
+import { Country } from '../../services/models/country.model';
+import { State } from '../../services/models/state.model';
 
 @Component({
   selector: 'app-checkout',
@@ -19,6 +21,10 @@ export class Checkout implements OnInit {
   totalQuantity = signal<number>(0);
   creditCardMonths = signal<number[]>([]);
   creditCardYears = signal<number[]>([]);
+  readonly countries = signal<Country[]>([]);
+  readonly shippingAddressStates = signal<State[]>([]);
+  readonly billingAddressStates = signal<State[]>([]);
+  
 
   protected readonly form = this.fb.nonNullable.group({
     customer: this.fb.nonNullable.group({
@@ -54,6 +60,7 @@ export class Checkout implements OnInit {
   ngOnInit(): void {
     this.getCreditCardMonths();
     this.getCreditCardYears();
+    this.loadCountries();
   }
 
   getCreditCardMonths(startMonth = 1): void {
@@ -62,6 +69,21 @@ export class Checkout implements OnInit {
 
   getCreditCardYears(): void {
     this.appFormService.getCreditCardYears().subscribe(years => this.creditCardYears.set(years));
+  }
+
+  loadCountries(): void {
+    this.appFormService.getCountries().subscribe(countries => this.countries.set(countries));
+  }
+
+  getStates(formGroupName: string): void {
+    const formGroup: AbstractControl | null = this.form.get(formGroupName);
+    const countryCode: string = formGroup?.value.country.code;
+
+
+    this.appFormService.getStates(countryCode).subscribe(states => {
+      formGroupName === 'shippingAddress' ? this.shippingAddressStates.set(states) : this.billingAddressStates.set(states);
+      formGroup?.get('state')?.setValue(states[0])
+    });
   }
 
   handleMonthsAndYears(): void {
@@ -77,9 +99,11 @@ export class Checkout implements OnInit {
 
   copyShippingAddressToBillingAddress(event: any){
     if (event.target.checked) {
-      this.form.controls.billingAddress.setValue(this.form.controls.shippingAddress.getRawValue())
+      this.form.controls.billingAddress.setValue(this.form.controls.shippingAddress.getRawValue());
+      this.billingAddressStates.set(this.shippingAddressStates());
     } else {
-      this.form.controls.billingAddress.reset()
+      this.form.controls.billingAddress.reset();
+      this.billingAddressStates.set([]);
     }
   }
 
