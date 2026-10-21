@@ -108,10 +108,10 @@ export class Checkout implements OnInit {
   }
 
   protected onSubmit() {
-    // if (this.form.invalid) {
-    //   this.form.markAllAsTouched();   // reveal every error at once
-    //   return;
-    // }
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();   // reveal every error at once
+      return;
+    }
     const value = this.form.getRawValue();   // fully typed, no nulls
     console.log(value);
   }
