@@ -9,6 +9,7 @@ import { FieldRow } from '../../components/field-row/field-row';
 import { createAddressForm } from '../../common/address-form';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { notOnlyWhitespace, PATTERNS } from '../../common/validators';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -20,6 +21,7 @@ import { notOnlyWhitespace, PATTERNS } from '../../common/validators';
 export class Checkout implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly appFormService: AppFormService = inject(AppFormService);
+  private readonly cartService: CartService = inject(CartService);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly submitting = signal(false);
@@ -57,6 +59,7 @@ protected readonly form = this.fb.group({
     this.getCreditCardYears();
     this.loadCountries();
     this.monitorExpirationYear();
+    this.reviewCartDetails();
   }
 
   monitorExpirationYear(): void {
@@ -87,6 +90,14 @@ protected readonly form = this.fb.group({
   loadCountries(): void {
     this.appFormService.getCountries()
       .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countries => this.countries.set(countries));
+  }
+
+  reviewCartDetails(): void {
+    this.cartService.totalPrice.asObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(totalPrice => this.totalPrice.set(totalPrice));
+    this.cartService.totalQuantity.asObservable()
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(totalQuantity => this.totalQuantity.set(totalQuantity));
+    this.cartService.computeCartTotals();
   }
 
   getStates(formGroupName: string): void {

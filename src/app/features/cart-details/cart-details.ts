@@ -19,7 +19,7 @@ export class CartDetails implements OnInit {
   totalQuantity = signal<number>(0);
 
   ngOnInit() {
-    this.listCartDetails()
+    this.listCartDetails();
   }
 
   listCartDetails(): void {
@@ -28,7 +28,7 @@ export class CartDetails implements OnInit {
     this.cartService.totalPrice.asObservable().subscribe(totalPrice => this.totalPrice.set(totalPrice));
     this.cartService.totalQuantity.asObservable().subscribe(totalQuantity => this.totalQuantity.set(totalQuantity));
 
-    this.cartService.computeCartTotals()
+    this.cartService.computeCartTotals();
   }
 
   incrementQuantity(cartItem: CartItem): void {
