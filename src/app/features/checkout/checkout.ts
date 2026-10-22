@@ -10,6 +10,10 @@ import { createAddressForm } from '../../common/address-form';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { notOnlyWhitespace, PATTERNS } from '../../common/validators';
 import { CartService } from '../../services/cart.service';
+import { CheckoutService } from '../../services/checkout.service';
+import { Router } from '@angular/router';
+import { toOrderDto } from '../../common/purchase-mapper';
+import { PurchaseDto } from '../../common/purchase';
 
 @Component({
   selector: 'app-checkout',
@@ -20,8 +24,10 @@ import { CartService } from '../../services/cart.service';
 })
 export class Checkout implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
+  private readonly router: Router = inject(Router);
   private readonly appFormService: AppFormService = inject(AppFormService);
   private readonly cartService: CartService = inject(CartService);
+  private readonly checkoutService: CheckoutService = inject(CheckoutService);
   private readonly destroyRef = inject(DestroyRef);
 
   protected readonly submitting = signal(false);
@@ -36,23 +42,23 @@ export class Checkout implements OnInit {
   readonly billingAddressStates = signal<State[]>([]);
   
 
-protected readonly form = this.fb.group({
-  customer: this.fb.group({
-    firstName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
-    lastName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
-    email: ['', [ Validators.required, Validators.email, Validators.pattern(PATTERNS.email) ]],
-  }),
-  shippingAddress: createAddressForm(this.fb),
-  billingAddress: createAddressForm(this.fb),
-  creditCard: this.fb.group({
-    cardType: ['VISA', Validators.required],
-    nameOnCard: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
-    cardNumber: ['', [ Validators.required, Validators.pattern(PATTERNS.creditCardNumber) ]],
-    securityCode: ['', [ Validators.required, Validators.pattern(PATTERNS.securityCode) ]],
-    expirationMonth: [0, Validators.required],
-    expirationYear: [0, Validators.required],
-  }),
-});
+  protected readonly form = this.fb.group({
+    customer: this.fb.group({
+      firstName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+      lastName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+      email: ['', [ Validators.required, Validators.email, Validators.pattern(PATTERNS.email) ]],
+    }),
+    shippingAddress: createAddressForm(this.fb),
+    billingAddress: createAddressForm(this.fb),
+    creditCard: this.fb.group({
+      cardType: ['VISA', Validators.required],
+      nameOnCard: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+      cardNumber: ['', [ Validators.required, Validators.pattern(PATTERNS.creditCardNumber) ]],
+      securityCode: ['', [ Validators.required, Validators.pattern(PATTERNS.securityCode) ]],
+      expirationMonth: [0, Validators.required],
+      expirationYear: [0, Validators.required],
+    }),
+  });
 
   ngOnInit(): void {
     this.getCreditCardMonths();
@@ -120,12 +126,28 @@ protected readonly form = this.fb.group({
     }
   }
 
+  resetData(): void {
+    this.cartService.clearCart(); // clear cart data
+    this.form.reset(); // reset form data
+    this.router.navigateByUrl('/product-list'); // navigate back to product-list page
+  }
+
   protected onSubmit() {
     if (this.form.invalid) {
-      this.form.markAllAsTouched();   // reveal every error at once
+      this.form.markAllAsTouched();
       return;
     }
-    const value = this.form.getRawValue();   // fully typed, no nulls
-    console.log(value);
+    const formValue = this.form.getRawValue();
+    const purchase: PurchaseDto = toOrderDto(formValue, this.cartService.cartItems, this.totalQuantity(), this.totalPrice());
+    
+    this.checkoutService.placeOrder(purchase).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: response => {
+        alert(`Your Order has been received.\n Order Tracking number: ${response.orderTrackingNumber}`);
+        this.resetData();
+      },
+      error: err => {
+        alert(`There was an error: ${err.message}`)
+      }
+    });
   }
 }

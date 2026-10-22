@@ -62,4 +62,10 @@ export class CartService {
             this.computeCartTotals();
         }
     }
+
+    clearCart(): void {
+        this.cartItems = [];
+        this.totalPrice.next(0);
+        this.totalQuantity.next(0);
+    }
 }
