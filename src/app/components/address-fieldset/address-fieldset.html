@@ -2,7 +2,7 @@
       <h3>{{ legend() }}</h3>
 
       <app-field-row label="Country" [for]="idPrefix() + 'Country'" [control]="group().controls['country']">
-        <select [id]="idPrefix() + 'Country'" formControlName="country">
+        <select [id]="idPrefix() + 'Country'" formControlName="country" (change)="getStates('shippingAddress')">
           <option [ngValue]="null">Select a country</option>
           @for (country of countries(); track country.id) {
             <option [ngValue]="country">{{ country.name }}</option>

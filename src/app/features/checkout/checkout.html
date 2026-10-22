@@ -2,313 +2,78 @@
     <div class="section-content section-content-p30">
         <div class="container-fluid">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            
+
                 <fieldset formGroupName="customer" class="form-area">
                     <h3>Customer</h3>
-                
-                    <div class="row">
-                        <div class="col-md-2"><label for="firstName">First name</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="firstName" type="text" formControlName="firstName" /> 
-                            </div> 
-                            <!-- @if (form.controls.customer.controls.firstName; as ctrl) {
-                            @if (ctrl.touched && ctrl.invalid) {
-                                    <p class="col-md-10 offset-md-2 field-error">
-                                    @if (ctrl.hasError('required')) { Enter your first name. }
-                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                                    </p>
-                            }
-                            } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="lastName">Last name</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="lastName" type="text" formControlName="lastName" />
-                            </div> 
-                        <!-- @if (form.controls.customer.controls.lastName; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter your last name. }
-                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="email">Email</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="email" type="email" formControlName="email" />
-                            </div> 
-                        <!-- @if (form.controls.customer.controls.email.touched && form.controls.customer.controls.email.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">Enter a valid email address.</p>
-                        } -->
-                        </div>
-                    </div>
+                    <app-field-row label="First name" for="firstName" [control]="form.controls.customer.controls.firstName">
+                        <input id="firstName" type="text" formControlName="firstName" autocomplete="given-name" />
+                    </app-field-row>
+                    <app-field-row label="Last name" for="lastName" [control]="form.controls.customer.controls.lastName">
+                        <input id="lastName" type="text" formControlName="lastName" autocomplete="family-name" />
+                    </app-field-row>
+                    <app-field-row label="Email" for="email" [control]="form.controls.customer.controls.email">
+                        <input id="email" type="email" formControlName="email" autocomplete="email" />
+                    </app-field-row>
                 </fieldset>
 
-                <fieldset formGroupName="shippingAddress" class="form-area">
-                    <h3>Shipping Address</h3>
-                
-                    <div class="row">
-                        <div class="col-md-2"><label for="country">Country</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="country"formControlName="country" (change)="getStates('shippingAddress')">
-                                    @for (country of countries(); track country.id) {
-                                        <option [ngValue]="country">{{country.name}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="street">Street</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="street" type="text" formControlName="street" /> 
-                            </div> 
-                            <!-- @if (form.controls.shippingAddress.controls.street; as ctrl) {
-                            @if (ctrl.touched && ctrl.invalid) {
-                                    <p class="col-md-10 offset-md-2 field-error">
-                                    @if (ctrl.hasError('required')) { Enter Street. }
-                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                                    </p>
-                            }
-                            } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="city">City</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="city" type="text" formControlName="city" />
-                            </div> 
-                        <!-- @if (form.controls.shippingAddress.controls.city; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter your City. }
-                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="state">State</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="state" formControlName="state">
-                                    @for (state of shippingAddressStates(); track state.id) {
-                                        <option [ngValue]="state">{{state.name}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="zipCode">Zip Code</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="zipCode" type="text" formControlName="zipCode" />
-                            </div> 
-                        <!-- @if (form.controls.shippingAddress.controls.zipCode; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter Zip Code. }
-                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                </fieldset>
+                <app-address-fieldset legend="Shipping Address" idPrefix="shipping"
+                                        [group]="form.controls.shippingAddress"
+                                        [countries]="countries()" [states]="shippingAddressStates()"
+                                        (countrySelected)="getStates($event)" />
 
-                <!-- Checkbox to copy Shipping Address to Billing Address -->
                 <div class="input-space">
                     <label for="copyAddress" class="au-checkbox">
-                        <input type="checkbox" (change)="copyShippingAddressToBillingAddress($event)" name="copyAddress" id="copyAddress">
-                        <span class="au-checkmark"></span>Billing Address same as Shipping Address
+                    <input type="checkbox" id="copyAddress"
+                            (change)="copyShippingAddressToBillingAddress($event)" />
+                    <span class="au-checkmark"></span>Billing address same as shipping address
                     </label>
                 </div>
 
-                <fieldset formGroupName="billingAddress" class="form-area">
-                    <h3>Billing Address</h3>
-                
-                    <div class="row">
-                        <div class="col-md-2"><label for="country">Country</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="billingCountry"formControlName="country" (change)="getStates('billingAddress')">
-                                    @for (country of countries(); track country.id) {
-                                        <option [ngValue]="country">{{country.name}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="street">Street</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="billingStreet" type="text" formControlName="street" /> 
-                            </div> 
-                            <!-- @if (form.controls.billingAddress.controls.street; as ctrl) {
-                            @if (ctrl.touched && ctrl.invalid) {
-                                    <p class="col-md-10 offset-md-2 field-error">
-                                    @if (ctrl.hasError('required')) { Enter Street. }
-                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                                    </p>
-                            }
-                            } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="city">City</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="billingCity" type="text" formControlName="city" />
-                            </div> 
-                        <!-- @if (form.controls.billingAddress.controls.city; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter your City. }
-                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="state">State</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="billingState" formControlName="state">
-                                    @for (state of billingAddressStates(); track state.id) {
-                                        <option [ngValue]="state">{{state.name}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="zipCode">Zip Code</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="billingZipCode" type="text" formControlName="zipCode" />
-                            </div> 
-                        <!-- @if (form.controls.billingAddress.controls.zipCode; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter Zip Code. }
-                            @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                </fieldset>
+                <app-address-fieldset legend="Billing Address" idPrefix="billing"
+                                        [group]="form.controls.billingAddress"
+                                        [countries]="countries()" [states]="billingAddressStates()"
+                                        (countrySelected)="getStates($event)" />
 
                 <fieldset formGroupName="creditCard" class="form-area">
                     <h3>Credit Card</h3>
-                
-                    <div class="row">
-                        <div class="col-md-2"><label for="country">Card Type</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="cardType" formControlName="cardType">
-                                    <option value="Visa">Visa</option>
-                                    <option value="Mastercard ">Mastercard </option>
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="street">Name on Card</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="nameOnCard" type="text" formControlName="nameOnCard" /> 
-                            </div> 
-                            <!-- @if (form.controls.creditCard.controls.street; as ctrl) {
-                            @if (ctrl.touched && ctrl.invalid) {
-                                    <p class="col-md-10 offset-md-2 field-error">
-                                    @if (ctrl.hasError('required')) { Enter Name. }
-                                    @else if (ctrl.hasError('minlength')) { At least 2 characters. }
-                                    </p>
-                            }
-                            } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="cardNumber">Card Number</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="cardNumber" type="number" formControlName="cardNumber" />
-                            </div> 
-                        <!-- @if (form.controls.creditCard.controls.cardNumber; as ctrl) {
-                        @if (ctrl.touched && ctrl.invalid) {
-                            <p class="col-md-10 offset-md-2 field-error">
-                            @if (ctrl.hasError('required')) { Enter your Card Number. }
-                            @else if (ctrl.hasError('minlength')) { At least 16 digit. }
-                            </p>
-                        }
-                        } -->
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="secuirtyCode">Secuirty Code</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input id="secuirtyCode" type="number" formControlName="secuirtyCode" />
-                            <!-- @if (form.controls.creditCard.controls.secuirtyCode; as ctrl) {
-                            @if (ctrl.touched && ctrl.invalid) {
-                                <p class="col-md-10 offset-md-2 field-error">
-                                @if (ctrl.hasError('required')) { Enter your Security Code. }
-                                @else if (ctrl.hasError('minlength')) { At least 3 digit. }
-                                </p>
-                            }
-                            } -->
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="country">Expiration Month</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="expirationMonth" formControlName="expirationMonth">
-                                    @for (month of creditCardMonths(); track month) {
-                                        <option [value]="month">{{month}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2"><label for="country">Expiration Year</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select id="expirationYear" formControlName="expirationYear" (change)="handleMonthsAndYears()">
-                                    @for (year of creditCardYears(); track year) {
-                                        <option [value]="year">{{year}}</option>
-                                    }
-                                </select> 
-                            </div> 
-                        </div>
-                    </div>
+                    <app-field-row label="Card type" for="cardType" [control]="form.controls.creditCard.controls.cardType">
+                    <select id="cardType" formControlName="cardType">
+                        <option value="VISA">Visa</option>
+                        <option value="MASTERCARD">Mastercard</option>
+                    </select>
+                    </app-field-row>
+                    <app-field-row label="Name on card" for="nameOnCard" [control]="form.controls.creditCard.controls.nameOnCard">
+                    <input id="nameOnCard" type="text" formControlName="nameOnCard" autocomplete="cc-name" />
+                    </app-field-row>
+                    <app-field-row label="Card number" for="cardNumber" [control]="form.controls.creditCard.controls.cardNumber"
+                                [messages]="{ pattern: 'Enter the 16 digits on your card.' }">
+                    <input id="cardNumber" type="text" inputmode="numeric" maxlength="16"
+                            formControlName="cardNumber" autocomplete="cc-number" />
+                    </app-field-row>
+                    <app-field-row label="Security code" for="securityCode" [control]="form.controls.creditCard.controls.securityCode"
+                                [messages]="{ pattern: 'Enter the 3 digits on the back.' }">
+                    <input id="securityCode" type="text" inputmode="numeric" maxlength="3"
+                            formControlName="securityCode" autocomplete="cc-csc" />
+                    </app-field-row>
+                    <app-field-row label="Expiration month" for="expirationMonth" [control]="form.controls.creditCard.controls.expirationMonth">
+                    <select id="expirationMonth" formControlName="expirationMonth">
+                        @for (month of creditCardMonths(); track month) { <option [value]="month">{{ month }}</option> }
+                    </select>
+                    </app-field-row>
+                    <app-field-row label="Expiration year" for="expirationYear" [control]="form.controls.creditCard.controls.expirationYear">
+                    <select id="expirationYear" formControlName="expirationYear">
+                        @for (year of creditCardYears(); track year) { <option [value]="year">{{ year }}</option> }
+                    </select>
+                    </app-field-row>
                 </fieldset>
 
-                <!-- Order Details -->
                 <div class="form-area">
-                    <h3>Review Your Order</h3>
-                    <p>Total Quantity: {{ totalQuantity() }}</p>
+                    <h3>Review your order</h3>
+                    <p>Total quantity: {{ totalQuantity() }}</p>
                     <p>Shipping: FREE</p>
-                    <p> Total Price: {{ totalPrice() | currency: 'USD' }}</p>
+                    <p>Total price: {{ totalPrice() | currency: 'USD' }}</p>
                 </div>
-                
+
                 <div class="text-center">
                     <button type="submit" [disabled]="submitting()" class="btn btn-info">Purchase</button>
                 </div>

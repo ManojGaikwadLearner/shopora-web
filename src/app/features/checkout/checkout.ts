@@ -1,100 +1,102 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppFormService } from '../../services/app-form.service';
 import { Country } from '../../services/models/country.model';
 import { State } from '../../services/models/state.model';
+import { AddressFieldset } from '../../components/address-fieldset/address-fieldset';
+import { FieldRow } from '../../components/field-row/field-row';
+import { createAddressForm } from '../../common/address-form';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { notOnlyWhitespace, PATTERNS } from '../../common/validators';
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule, CurrencyPipe],
+  imports: [ReactiveFormsModule, CurrencyPipe, FieldRow, AddressFieldset],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 
 })
 export class Checkout implements OnInit {
-  private readonly fb = inject(FormBuilder);
+  private readonly fb = inject(NonNullableFormBuilder);
   private readonly appFormService: AppFormService = inject(AppFormService);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly submitting = signal(false);
-  totalPrice = signal<number>(0);
-  totalQuantity = signal<number>(0);
-  creditCardMonths = signal<number[]>([]);
-  creditCardYears = signal<number[]>([]);
+  protected readonly totalPrice = signal<number>(0);
+  protected readonly totalQuantity = signal<number>(0);
+
+  protected readonly creditCardMonths = signal<number[]>([]);
+  protected readonly creditCardYears = signal<number[]>([]);
+
   readonly countries = signal<Country[]>([]);
   readonly shippingAddressStates = signal<State[]>([]);
   readonly billingAddressStates = signal<State[]>([]);
   
 
-  protected readonly form = this.fb.nonNullable.group({
-    customer: this.fb.nonNullable.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-    }),
-    shippingAddress: this.fb.nonNullable.group({
-      country: ['', Validators.required],
-      street: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      zipCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-    }),
-    billingAddress: this.fb.nonNullable.group({
-      country: ['', Validators.required],
-      street: ['', Validators.required],
-      city: ['', Validators.required],
-      state: ['', Validators.required],
-      zipCode: ['', [Validators.required, Validators.pattern(/^\d{6}$/)]],
-    }),
-    creditCard: this.fb.nonNullable.group({
-      cardType: [['Visa'], Validators.required],
-      nameOnCard: ['', Validators.required],
-      cardNumber: ['', [Validators.required, Validators.maxLength(16)]],
-      secuirtyCode: ['', [Validators.required, Validators.maxLength(3)]],
-      expirationMonth: ['', Validators.required],
-      expirationYear: ['', Validators.required],
-    }),
-
-  });
+protected readonly form = this.fb.group({
+  customer: this.fb.group({
+    firstName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+    lastName: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+    email: ['', [ Validators.required, Validators.email, Validators.pattern(PATTERNS.email) ]],
+  }),
+  shippingAddress: createAddressForm(this.fb),
+  billingAddress: createAddressForm(this.fb),
+  creditCard: this.fb.group({
+    cardType: ['VISA', Validators.required],
+    nameOnCard: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
+    cardNumber: ['', [ Validators.required, Validators.pattern(PATTERNS.creditCardNumber) ]],
+    securityCode: ['', [ Validators.required, Validators.pattern(PATTERNS.securityCode) ]],
+    expirationMonth: [0, Validators.required],
+    expirationYear: [0, Validators.required],
+  }),
+});
 
   ngOnInit(): void {
     this.getCreditCardMonths();
     this.getCreditCardYears();
     this.loadCountries();
+    this.monitorExpirationYear();
+  }
+
+  monitorExpirationYear(): void {
+    this.form.controls.creditCard.controls.expirationYear.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(year => {
+        this.handleMonthsAndYears(Number(year))
+      });
+  }
+
+  handleMonthsAndYears(expirationYear: number): void {
+    const currentYear: number = new Date().getFullYear();
+    const startMonth: number = currentYear === expirationYear ? new Date().getMonth() + 1 : 1;
+    this.getCreditCardMonths(startMonth)
+
   }
 
   getCreditCardMonths(startMonth = 1): void {
-    this.appFormService.getCreditCardMonths(startMonth).subscribe(months => this.creditCardMonths.set(months));
+    this.appFormService.getCreditCardMonths(startMonth)
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(months => this.creditCardMonths.set(months));
   }
 
   getCreditCardYears(): void {
-    this.appFormService.getCreditCardYears().subscribe(years => this.creditCardYears.set(years));
+    this.appFormService.getCreditCardYears()
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(years => this.creditCardYears.set(years));
   }
 
   loadCountries(): void {
-    this.appFormService.getCountries().subscribe(countries => this.countries.set(countries));
+    this.appFormService.getCountries()
+      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countries => this.countries.set(countries));
   }
 
   getStates(formGroupName: string): void {
     const formGroup: AbstractControl | null = this.form.get(formGroupName);
     const countryCode: string = formGroup?.value.country.code;
 
-
-    this.appFormService.getStates(countryCode).subscribe(states => {
+    this.appFormService.getStates(countryCode).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(states => {
       formGroupName === 'shippingAddress' ? this.shippingAddressStates.set(states) : this.billingAddressStates.set(states);
       formGroup?.get('state')?.setValue(states[0])
     });
-  }
-
-  handleMonthsAndYears(): void {
-    const creditCardFormGroup = this.form.get('creditCard');
-
-    const currentYear: number = new Date().getFullYear();
-    const selectedYear: number = Number(creditCardFormGroup?.value?.expirationYear);
-
-    const startMonth: number = currentYear === selectedYear ? new Date().getMonth() + 1 : 1;
-    this.getCreditCardMonths(startMonth)
-
   }
 
   copyShippingAddressToBillingAddress(event: any){

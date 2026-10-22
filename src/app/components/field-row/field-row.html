@@ -3,7 +3,9 @@
     <div class="col-md-9">
         <div class="input-space"><ng-content /></div>
             @if (errorMessage(); as message) {
-                <p class="field-error">{{ message }}</p>
+                <div class="alert alert-danger">
+                    <div>{{ message }}</div>
+                </div>
             }
     </div>
 </div>

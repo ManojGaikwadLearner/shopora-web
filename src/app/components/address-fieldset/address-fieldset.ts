@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FieldRow } from '../field-row/field-row';
 import { Country } from '../../services/models/country.model';
@@ -16,4 +16,10 @@ export class AddressFieldset {
   readonly idPrefix = input.required<string>();
   readonly countries = input<Country[]>([]);
   readonly states = input<State[]>([]);
+  countrySelected = output<string>();
+
+  getStates(formGroupName: string): void {
+    this.countrySelected.emit(formGroupName);
+  }
+
 }
