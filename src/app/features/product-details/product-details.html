@@ -9,7 +9,7 @@
         <h4>Description</h4>
         <p>{{product()?.description}}</p>
 
-        <a [routerLink]="['/product-list']" class="mt-5">Back to Products</a>
+        <a [routerLink]="[PATHS.productList]" class="mt-5">Back to Products</a>
 
          @if (product() == null) {
             <div class="alert alert-warning col-md-12" role="alert">

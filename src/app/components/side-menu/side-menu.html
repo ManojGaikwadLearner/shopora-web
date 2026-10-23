@@ -1,6 +1,6 @@
 <aside class="menu-sidebar d-none d-lg-block">
   <div class="logo">
-    <a routerLink="/product-list">
+    <a [routerLink]="PATHS.productList">
       <img src="assets/images/logo.png" alt="Shopora" class="img-responsive" />
     </a>
   </div>
@@ -9,7 +9,7 @@
       <ul class="list-unstyled navbar-list">
         @for (category of productCategories(); track category.id) {
           <li>
-            <a [routerLink]="['/category', category.id]" routerLinkActive="active-link">{{ category.categoryName }}</a>
+            <a [routerLink]="[PATHS.category, category.id]" routerLinkActive="active-link">{{ category.categoryName }}</a>
           </li>
         }
       </ul>

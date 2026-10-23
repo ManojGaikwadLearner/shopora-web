@@ -5,10 +5,10 @@
           @for (product of products(); track product.id) {
             <div class="col-md-3">
               <div class="product-box">
-                <a [routerLink]="['/product', product.id]">
+                <a [routerLink]="[PATHS.product, product.id]">
                   <img [src]="product.imageUrl" class="img-responsive"/>
                 </a>
-                <a [routerLink]="['/product', product.id]" class="clickable no-underline">
+                <a [routerLink]="[PATHS.product, product.id]" class="clickable no-underline">
                   <h1>{{ product.name }}</h1>
                 </a>
                 <div class="price">{{ product.unitPrice | currency: 'USD' }}</div>

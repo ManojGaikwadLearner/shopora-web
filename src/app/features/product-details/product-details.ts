@@ -8,6 +8,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { CartItem } from '../../services/models/cart-item.model';
 import { CartService } from '../../services/cart.service';
 import { getCartItemFromProduct } from '../../shared/utils/common.util';
+import { PATHS } from '../../common/app-paths';
 
 @Component({
   imports: [CommonModule,CurrencyPipe, RouterLink],
@@ -21,6 +22,7 @@ export class ProductDetails implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly PATHS = PATHS;
   readonly product = signal<Product | null>(null);
   readonly error = signal<string | null>(null);
 

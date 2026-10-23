@@ -11,9 +11,11 @@ export class ProductService {
     httpClient: HttpClient = inject(HttpClient);
     private readonly baseUrl: string = '/api/products';
     private readonly searchByCategoryIdUrl = (categoryId: number): string => `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
-    private readonly productListPaginatedUrl = (categoryId: number, pageNumber: number, pageSize: number): string => `${this.searchByCategoryIdUrl(categoryId)}&page=${pageNumber}&size=${pageSize}`;
+    private readonly productListPaginatedUrl = (categoryId: number, pageNumber: number, pageSize: number): string => 
+        `${this.searchByCategoryIdUrl(categoryId)}&page=${pageNumber}&size=${pageSize}`;
     private readonly searchByNameContainingUrl = (name: string): string => `${this.baseUrl}/search/findByNameContaining?name=${name}`;
-    private readonly searchByNameContainingPaginatedUrl = (name: string, pageNumber: number, pageSize: number): string => `${this.searchByNameContainingUrl(name)}&page=${pageNumber}&size=${pageSize}`;
+    private readonly searchByNameContainingPaginatedUrl = (name: string, pageNumber: number, pageSize: number): string => 
+        `${this.searchByNameContainingUrl(name)}&page=${pageNumber}&size=${pageSize}`;
     private readonly categoryUrl: string = '/api/product-category';
     private readonly productUrl = (productId: number): string => `${this.baseUrl}/${productId}`;
 

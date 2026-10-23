@@ -11,6 +11,7 @@ import '@angular/localize/init';
 import { getCartItemFromProduct, pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../services/models/cart-item.model';
+import { PATHS } from '../../common/app-paths';
 
 @Component({
   selector: 'app-product-list',
@@ -24,6 +25,7 @@ export class ProductList implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
 
+  readonly PATHS = PATHS;
   readonly products = signal<Product[]>([]);
   readonly error = signal<string | null>(null);
   
