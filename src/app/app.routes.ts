@@ -1,10 +1,15 @@
 import { Routes } from '@angular/router';
+import { Login } from './features/login/login';
 
 export const routes: Routes = [
     {
         path: '',
         redirectTo: 'product-list',
         pathMatch: 'full'
+    },
+    {   
+        path: 'login',
+        component: Login 
     },
     {
         path: 'product-list',
