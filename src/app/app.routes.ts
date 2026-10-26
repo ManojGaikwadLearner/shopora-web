@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuardFn } from '@auth0/auth0-angular';
 import { Login } from './features/login/login';
 
 export const routes: Routes = [
@@ -38,6 +39,11 @@ export const routes: Routes = [
     {
         path: 'checkout',
         loadComponent: () => import('./features/checkout/checkout').then(m => m.Checkout)
+    },
+    {
+        path: 'members-page',
+        canActivate: [authGuardFn],
+        loadComponent: () => import('./features/members-page/members-page').then(m => m.MembersPage)
     },
     {
         path: 'page-not-found',
