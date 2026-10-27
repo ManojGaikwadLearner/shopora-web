@@ -13,15 +13,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class CartStatus implements OnInit {
 
-  cartService = inject(CartService);
+  private readonly cartService = inject(CartService);
   private readonly destroyRef = inject(DestroyRef);
-
 
   readonly PATHS = PATHS;
   protected readonly cartTotal = signal(0);
   protected readonly cartCount = signal(0);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.cartService.totalPrice.asObservable()
         .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(updatedTotalPrice => this.cartTotal.set(updatedTotalPrice));
     this.cartService.totalQuantity.asObservable().pipe(takeUntilDestroyed(this.destroyRef))

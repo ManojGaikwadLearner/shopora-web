@@ -1,0 +1,38 @@
+<div class="page-content">
+  <div class="section-content section-content-p30">
+    <div class="container-fluid">
+        <h3>Your Orders</h3>
+
+        @if (orderHistoryList().length > 0) {
+            <table class="table table-bordered">
+                <tr>
+                    <th width="20%">Order Tracking Number</th>
+                    <th width="10%">Total Price</th>
+                    <th width="10%">Total Quantity</th>
+                    <th width="10%">Date</th>
+                </tr>
+                @for (order of orderHistoryList(); track order.id) {
+                    <tr>
+                        <td>{{ order.orderTrackingNumber }}</td>
+                        <td>{{ order.totalPrice | currency: 'USD' }}</td>
+                        <td>{{ order.totalQuantity }}</td>
+                        <td>{{ order.dateCreated | date: 'medium' }}</td>
+                    </tr>
+                }
+            </table>
+        }
+
+        @if (orderHistoryList().length == 0) {
+            <div class="alert alert-warning col-md-12" role="alert">
+              No Orders found.
+            </div>
+        }
+
+        @if (error()) {
+            <div class="alert alert-danger col-md-12" role="alert">
+              {{ error() }}
+            </div>
+        }
+    </div>
+  </div>
+</div>

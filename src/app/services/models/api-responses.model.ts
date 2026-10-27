@@ -1,4 +1,5 @@
 import { Country } from "./country.model";
+import { Order } from "./order-history.model";
 import { ProductCategory } from "./product-cateory.model";
 import { Product } from "./product.model";
 import { State } from "./state.model";
@@ -30,6 +31,12 @@ export interface GetResponseCountries {
 export interface GetResponseStates {
     _embedded: {
         states: State[];
+    }
+}
+
+export interface GetResponseOrderHistory {
+    _embedded: {
+        orders: Order[];
     }
 }
 

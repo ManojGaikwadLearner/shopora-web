@@ -1,13 +1,27 @@
-import { Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CartItem } from './models/cart-item.model';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { BrowserStorage } from '../core/browser-storage.service';
+
+const isCart = (v: unknown): v is CartItem[] => Array.isArray(v) && v.every(i => typeof i?.id === 'number');
 
 @Service()
 export class CartService {
+
+    browserStorage: BrowserStorage = inject(BrowserStorage);
+
     cartItems: CartItem[] = [];
 
-    totalPrice: Subject<number> = new Subject<number>();
-    totalQuantity: Subject<number> = new Subject<number>();
+    totalPrice: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+    totalQuantity: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+
+    constructor() {
+        let data = this.browserStorage.read('cartItems', [], isCart);
+        if (data != null) {
+            this.cartItems = data;
+            this.computeCartTotals();
+        }
+    }
 
     addToCart(theCartItem: CartItem) {
         // Check if we already have the item in our cart
@@ -33,6 +47,10 @@ export class CartService {
         this.computeCartTotals();
     }
 
+    persistCartItems(): void {
+        this.browserStorage.write('cartItems', this.cartItems)
+    }
+
     decrementQuantity(theCartItem: CartItem): void {
         theCartItem.quantity--;
         if (theCartItem.quantity === 0) {
@@ -53,6 +71,8 @@ export class CartService {
 
         this.totalPrice.next(totalPriceValue);
         this.totalQuantity.next(totalQuantityValue);
+
+        this.persistCartItems();
     }
 
     removeItem(theCartItem: CartItem): void {

@@ -2,7 +2,8 @@
     @if (isAuthenticated()) {
         <div class="login-status-user-info">Welcome back {{ userFullName() }}</div>
         <button (click)="logout()" class="security-btn">Logout</button>
-        <button style="margin-left: 10px;" [routerLink]="PATHS.membersPage" class="security-btn">Member</button>
+        <button [routerLink]="PATHS.membersPage" class="security-btn feature-btn ml-1">Member</button>
+        <button [routerLink]="PATHS.orderHistory" class="security-btn feature-btn ml-1">Orders</button>
     } @else {
         <button [routerLink]="PATHS.login" class="security-btn">Login</button>
     }

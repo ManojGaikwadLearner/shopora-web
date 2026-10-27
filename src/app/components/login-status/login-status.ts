@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth0/auth0-angular';
 import { RouterLink } from '@angular/router';
 import { PATHS } from '../../common/app-paths';
+import { BrowserStorage } from '../../core/browser-storage.service';
 
 @Component({
   selector: 'app-login-status',
@@ -12,6 +13,7 @@ import { PATHS } from '../../common/app-paths';
 })
 export class LoginStatus {
   private readonly auth = inject(AuthService);
+  private readonly browserStorage: BrowserStorage = inject(BrowserStorage);
   private readonly doc = inject(DOCUMENT);
 
   readonly PATHS = PATHS;
@@ -32,9 +34,9 @@ export class LoginStatus {
     effect(() => {
       const email = this.userEmail();
       if (email) {
-        sessionStorage.setItem('userEmail', email);
+        this.browserStorage.write('userEmail', email);
       } else {
-        sessionStorage.removeItem('userEmail');
+        this.browserStorage.remove('userEmail');
       }
     });
   }

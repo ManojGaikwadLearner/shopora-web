@@ -15,3 +15,6 @@ export const getCartItemFromProduct = (product: Product): CartItem => {
     }
     return cartItem;
 }
+
+export const isCustomerEmail = (v: unknown): v is string =>
+  v === null || (typeof v === 'string' && v.includes('@'));
