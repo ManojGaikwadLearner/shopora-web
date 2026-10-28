@@ -50,3 +50,9 @@ package-lock.json
 
 .env
 src/environments/environment.local.ts
+
+*.key
+*.pem
+*.p12
+*.jks
+ssl/

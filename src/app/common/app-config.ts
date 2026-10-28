@@ -11,8 +11,8 @@ const authConfig: AuthConfig = {
   },
   httpInterceptor: {
     allowedList: [
-      { uri: '/api/orders/*', tokenOptions: { authorizationParams: { audience: 'http://localhost:8080' } } },
-      { uri: '/api/checkout/purchase', tokenOptions: { authorizationParams: { audience: 'http://localhost:8080' } } },
+      { uri: '/api/orders/*', tokenOptions: { authorizationParams: { audience: environment.backendUrl } } },
+      { uri: '/api/checkout/purchase', tokenOptions: { authorizationParams: { audience: environment.backendUrl } } },
     ],
   },
 };
