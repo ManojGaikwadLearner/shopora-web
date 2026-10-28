@@ -152,12 +152,12 @@ your API runs elsewhere.
 
 ## App Screens
 
-![alt text](../../../ux/Shopora_Frontend_Screenshots/01_Product_list.png)
-![alt text](../../../ux/Shopora_Frontend_Screenshots/02_Product_List_by_Product_Category.png)
-![alt text](../../../ux/Shopora_Frontend_Screenshots/03_Product_Search_Result.png)
-![alt text](../../../ux/Shopora_Frontend_Screenshots/04_Product_Search_Not_Found.png)
-![alt text](../../../ux/Shopora_Frontend_Screenshots/05_Page_Footer.png)
-![alt text](../../../ux/Shopora_Frontend_Screenshots/06_Product_Details.png)
+![Product Listing](docs/screenshots/01_Product_list.png)
+![Product List by Product Category](docs/screenshots/02_Product_List_by_Product_Category.png)
+![Product Search Result](docs/screenshots/03_Product_Search_Result.png)
+![Product Search Not Found](docs/screenshots/04_Product_Search_Not_Found.png)
+![Page Footer](docs/screenshots/05_Page_Footer.png)
+![Product Details](docs/screenshots/06_Product_Details.png)
 
 
 ## Project structure
