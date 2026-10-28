@@ -1,6 +1,4 @@
-<div class="main-content page-m">
-    <div class="section-content section-content-p30">
-        <div class="container-fluid">
+<app-page-layout variant="main-page-m">
             <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
                 <fieldset formGroupName="customer" class="form-area">
@@ -78,7 +76,5 @@
                     <button type="submit" [disabled]="submitting()" class="btn btn-info">Purchase</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
+</app-page-layout>
 

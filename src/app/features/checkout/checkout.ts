@@ -17,10 +17,11 @@ import { PurchaseDto } from '../../common/purchase';
 import { BrowserStorage } from '../../core/browser-storage.service';
 import { isCustomerEmail } from '../../shared/utils/common.util';
 import { PATHS } from '../../common/app-paths';
+import { PageLayout } from '../../components/page-layout/page-layout';
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule, CurrencyPipe, FieldRow, AddressFieldset],
+  imports: [ReactiveFormsModule, CurrencyPipe, PageLayout, FieldRow, AddressFieldset],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 

@@ -12,10 +12,11 @@ import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../services/models/cart-item.model';
 import { PATHS } from '../../common/app-paths';
 import { ProductCard } from '../../components/product-card/product-card';
+import { PageLayout } from '../../components/page-layout/page-layout';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, ProductCard, NgbPagination],
+  imports: [CommonModule, PageLayout, ProductCard, NgbPagination],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })

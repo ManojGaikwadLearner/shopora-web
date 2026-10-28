@@ -5,6 +5,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
 import { Header } from './components/header/header';
 import { Footer } from './components/footer/footer';
+import { PageLayout } from './components/page-layout/page-layout';
 
 interface ChromeConfig {
   chrome?: boolean;   // all three at once
@@ -14,7 +15,7 @@ interface ChromeConfig {
 }
 
 @Component({
-  imports: [RouterOutlet, SideMenu, Header, Footer],
+  imports: [RouterOutlet, PageLayout, SideMenu, Header, Footer],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',

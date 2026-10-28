@@ -1,6 +1,6 @@
 <div class="page-wrapper">
   @if (showSidebar()) {
-    <app-side-menu />
+    <app-side-menu />      
   }
 
   <div class="page-container">
@@ -9,13 +9,9 @@
       <app-header />
     }
 
-    <main class="main-content">
-      <div class="section-content section-content-p30">
-        <div class="container-fluid">
-          <router-outlet />
-        </div>
-      </div>
-    </main>
+    <app-page-layout variant="main">
+      <router-outlet />
+    </app-page-layout>
 
   </div>
 </div>

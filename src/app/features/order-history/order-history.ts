@@ -5,9 +5,10 @@ import { BrowserStorage } from '../../core/browser-storage.service';
 import { isCustomerEmail } from '../../shared/utils/common.util';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { PageLayout } from '../../components/page-layout/page-layout';
 
 @Component({
-  imports: [CurrencyPipe, DatePipe],
+  imports: [CurrencyPipe, DatePipe, PageLayout],
   selector: 'app-order-history',
   styleUrl: './order-history.scss',
   templateUrl: './order-history.html',

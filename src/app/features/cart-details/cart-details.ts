@@ -5,9 +5,10 @@ import { CurrencyPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PATHS } from '../../common/app-paths';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PageLayout } from '../../components/page-layout/page-layout';
 
 @Component({
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, PageLayout],
   selector: 'app-cart-details',
   styleUrl: './cart-details.scss',
   templateUrl: './cart-details.html',
