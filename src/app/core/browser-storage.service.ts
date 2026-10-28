@@ -1,4 +1,3 @@
-// core/browser-storage.ts
 import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 

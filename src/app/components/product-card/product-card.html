@@ -1,0 +1,12 @@
+<div class="product-box">
+    <a [routerLink]="link()">
+        <img [src]="product().imageUrl" [alt]="product().name" class="img-responsive" />
+    </a>
+    <a [routerLink]="link()" class="clickable no-underline">
+        <h3>{{ product().name }}</h3>
+    </a>
+    <div class="price">{{ product().unitPrice | currency: 'USD' }}</div>
+    <button type="button" class="btn btn-primary btn-sm" (click)="addToCart.emit(product())">
+        Add to cart
+    </button>
+</div>

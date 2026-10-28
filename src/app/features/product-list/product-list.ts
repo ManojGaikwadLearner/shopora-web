@@ -1,21 +1,21 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { ActivatedRoute, ParamMap, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { ProductService } from '../../services/product.service';
 import { Product } from '../../services/models/product.model';
 import { GetResponseProducts } from '../../services/models/api-responses.model';
-import { NgbPagination, NgbPaginationNext, NgbPaginationNumber, NgbPaginationPages, NgbPaginationPrevious } from '@ng-bootstrap/ng-bootstrap';
-import '@angular/localize/init';
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 import { getCartItemFromProduct, pageNumberFromAPItoUI, pageNumberFromUItoAPI } from '../../shared/utils/common.util';
 import { CartService } from '../../services/cart.service';
 import { CartItem } from '../../services/models/cart-item.model';
 import { PATHS } from '../../common/app-paths';
+import { ProductCard } from '../../components/product-card/product-card';
 
 @Component({
   selector: 'app-product-list',
-  imports: [CommonModule, CurrencyPipe, RouterLink, NgbPagination],
+  imports: [CommonModule, ProductCard, NgbPagination],
   templateUrl: './product-list.html',
   styleUrl: './product-list.scss',
 })

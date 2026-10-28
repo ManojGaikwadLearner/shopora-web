@@ -26,8 +26,7 @@ export class OrderHistory implements OnInit {
   }
 
   loadOrderHistory(): void {
-    const customerEmail: string = 'john.doe@shopora.com';
-    // || this.browserStorage.read('userEmail', '', isCustomerEmail);
+    const customerEmail: string = this.browserStorage.read('userEmail', '', isCustomerEmail);
     this.orderHistoryService.getOrderHistory(customerEmail).pipe(
         takeUntilDestroyed(this.destroyRef),
       ).subscribe({
