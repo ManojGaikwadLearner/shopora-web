@@ -2,8 +2,6 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export const PATTERNS = {
     email: /^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/,
-    creditCardNumber: /^\d{16}$/,
-    securityCode: /^\d{3}$/,
     zipCode: /^\d{6}$/
 }
 

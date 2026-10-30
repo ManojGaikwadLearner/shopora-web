@@ -1,0 +1,15 @@
+<fieldset class="form-area">
+    <h3>Payment</h3>
+
+    @if (loadError(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+    } @else if (!ready()) {
+    <p class="muted">Loading secure payment form…</p>
+    }
+
+    <div #mount class="payment-element"></div>
+
+    @if (payError(); as message) {
+    <p class="field-error" role="alert">{{ message }}</p>
+    }
+</fieldset>

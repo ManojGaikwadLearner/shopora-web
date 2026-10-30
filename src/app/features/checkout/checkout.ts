@@ -1,5 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal, viewChild } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppFormService } from '../../services/app-form.service';
 import { Country } from '../../services/models/country.model';
@@ -13,15 +12,17 @@ import { CartService } from '../../services/cart.service';
 import { CheckoutService } from '../../services/checkout.service';
 import { Router } from '@angular/router';
 import { toOrderDto } from '../../common/purchase-mapper';
-import { PurchaseDto } from '../../common/purchase';
 import { BrowserStorage } from '../../core/browser-storage.service';
 import { isCustomerEmail } from '../../shared/utils/common.util';
 import { PATHS } from '../../common/app-paths';
 import { PageLayout } from '../../components/page-layout/page-layout';
+import { StripePayment } from '../../components/stripe-payment/stripe-payment';
+import { firstValueFrom } from 'rxjs';
+import { OrderSummary } from '../../components/order-summary/order-summary';
 
 @Component({
   selector: 'app-checkout',
-  imports: [ReactiveFormsModule, CurrencyPipe, PageLayout, FieldRow, AddressFieldset],
+  imports: [ReactiveFormsModule, PageLayout, FieldRow, AddressFieldset, OrderSummary, StripePayment],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 
@@ -35,12 +36,10 @@ export class Checkout implements OnInit {
   private readonly checkoutService: CheckoutService = inject(CheckoutService);
   private readonly destroyRef = inject(DestroyRef);
 
-  protected readonly submitting = signal(false);
-  protected readonly totalPrice = signal<number>(0);
-  protected readonly totalQuantity = signal<number>(0);
+  protected readonly payment = viewChild.required(StripePayment);
 
-  protected readonly creditCardMonths = signal<number[]>([]);
-  protected readonly creditCardYears = signal<number[]>([]);
+  protected readonly submitting = signal(false);
+  readonly error = signal<string | null>(null);
 
   readonly countries = signal<Country[]>([]);
   readonly shippingAddressStates = signal<State[]>([]);
@@ -55,23 +54,11 @@ export class Checkout implements OnInit {
       }),
       shippingAddress: createAddressForm(this.fb),
       billingAddress: createAddressForm(this.fb),
-      creditCard: this.fb.group({
-        cardType: ['VISA', Validators.required],
-        nameOnCard: ['', [ Validators.required, Validators.minLength(2), notOnlyWhitespace ]],
-        cardNumber: ['', [ Validators.required, Validators.pattern(PATTERNS.creditCardNumber) ]],
-        securityCode: ['', [ Validators.required, Validators.pattern(PATTERNS.securityCode) ]],
-        expirationMonth: [0, Validators.required],
-        expirationYear: [0, Validators.required],
-      }),
     });
 
   ngOnInit(): void {
     this.initializeUserEmail();
-    this.getCreditCardMonths();
-    this.getCreditCardYears();
     this.loadCountries();
-    this.monitorExpirationYear();
-    this.reviewCartDetails();
   }
 
   initializeUserEmail(): void {
@@ -81,41 +68,9 @@ export class Checkout implements OnInit {
     }  
   }
 
-  monitorExpirationYear(): void {
-    this.form.controls.creditCard.controls.expirationYear.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(year => {
-        this.handleMonthsAndYears(Number(year))
-      });
-  }
-
-  handleMonthsAndYears(expirationYear: number): void {
-    const currentYear: number = new Date().getFullYear();
-    const startMonth: number = currentYear === expirationYear ? new Date().getMonth() + 1 : 1;
-    this.getCreditCardMonths(startMonth);
-  }
-
-  getCreditCardMonths(startMonth = 1): void {
-    this.appFormService.getCreditCardMonths(startMonth)
-      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(months => this.creditCardMonths.set(months));
-  }
-
-  getCreditCardYears(): void {
-    this.appFormService.getCreditCardYears()
-      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(years => this.creditCardYears.set(years));
-  }
-
   loadCountries(): void {
     this.appFormService.getCountries()
       .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(countries => this.countries.set(countries));
-  }
-
-  reviewCartDetails(): void {
-    this.cartService.totalPrice.asObservable()
-      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(totalPrice => this.totalPrice.set(totalPrice));
-    this.cartService.totalQuantity.asObservable()
-      .pipe(takeUntilDestroyed(this.destroyRef)).subscribe(totalQuantity => this.totalQuantity.set(totalQuantity));
-    this.cartService.computeCartTotals();
   }
 
   getStates(formGroupName: string): void {
@@ -144,22 +99,29 @@ export class Checkout implements OnInit {
     this.router.navigateByUrl(this.PATHS.productList); // navigate back to product-list page
   }
 
-  protected onSubmit() {
+  protected async onSubmit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    const formValue = this.form.getRawValue();
-    const purchase: PurchaseDto = toOrderDto(formValue, this.cartService.cartItems, this.totalQuantity(), this.totalPrice());
-    
-    this.checkoutService.placeOrder(purchase).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: response => {
-        alert(`Your Order has been received.\n Order Tracking number: ${response.orderTrackingNumber}`);
-        this.resetData();
-      },
-      error: err => {
-        alert(`There was an error: ${err.message}`)
-      }
-    });
+
+    this.submitting.set(true);
+    try {
+      // Charge first — no point creating an order that was never paid for.
+      const charged = await this.payment().confirm();
+      if (!charged) return;
+
+      const order = toOrderDto(this.form.getRawValue(), this.cartService.cartItems, this.cartService.totalQuantity.getValue(), this.cartService.totalPrice.getValue());
+      const { orderTrackingNumber } = await firstValueFrom(this.checkoutService.placeOrder(order));
+
+      alert(`Your Order has been received.\n Order Tracking number: ${orderTrackingNumber}`);
+      this.resetData();
+    } catch {
+      this.error.set('Payment went through but we could not save your order. Contact support with your email.');
+    } finally {
+      this.submitting.set(false);
+      this.error.set(null);
+    }
   }
+
 }
