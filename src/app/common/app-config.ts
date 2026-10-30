@@ -5,7 +5,7 @@ const authConfig: AuthConfig = {
   domain: environment.auth.domain,
   clientId: environment.auth.clientId,
   authorizationParams: {
-    redirect_uri: window.location.origin,     // snake_case, and no /login/callback
+    redirect_uri: environment.auth.redirect_uri,     // snake_case, and no /login/callback
     audience: environment.auth.audience,
     scope: 'openid profile email',            // singular, space-separated string
   },

@@ -2,8 +2,9 @@ export const environment = {
   production: false,
   backendUrl: 'https://localhost:8443',
   auth: { 
-    domain: 'dev-qymz162zoop22nv6.us.auth0.com', 
-    clientId: '4rPTlBysTjLFhAZCtSiY1FUYfoktESPE', 
-    audience: 'https://localhost:8443' 
+    domain: 'dev-zo84ngcxwpum25em.us.auth0.com', 
+    clientId: 'peMA0RKJXPGTjLvsuzPqv6u6SNGb6mN8', 
+    audience: 'https://localhost:8443',
+    redirect_uri: 'https://localhost:4200'
   },
 };
