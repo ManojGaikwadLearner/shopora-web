@@ -3,6 +3,8 @@ import { StripeElements, StripePaymentElement } from '@stripe/stripe-js';
 import { CartService } from '../../services/cart.service';
 import { StripeService } from '../../services/stripe.service';
 import { PaymentInfo } from '../../services/models/payment-info.model';
+import { createStripeBillingAddress } from '../../common/purchase-mapper';
+import { PATHS } from '../../common/app-paths';
 
 @Component({
   imports: [],
@@ -11,6 +13,8 @@ import { PaymentInfo } from '../../services/models/payment-info.model';
   templateUrl: './stripe-payment.html',
 })
 export class StripePayment {
+
+  readonly PATHS = PATHS;
   /** Emitted once the card is charged, so the parent can persist the order. */
   readonly paid = output<void>();
 
@@ -58,14 +62,19 @@ export class StripePayment {
   }
 
   /** Called by the parent after the rest of the form validates. Returns true if charged. */
-  async confirm(): Promise<boolean> {
+  async confirm(purchase: any): Promise<boolean> {
     const stripe = await this.stripeService.stripe();
     if (!stripe || !this.elements) return false;
 
     this.payError.set(null);
     const { error } = await stripe.confirmPayment({
       elements: this.elements,
-      confirmParams: { return_url: `${window.location.origin}/order-confirmation` },
+      confirmParams: { 
+        return_url: `${window.location.origin}${this.PATHS.productList}`,
+        payment_method_data: {
+          billing_details: createStripeBillingAddress(purchase)
+        }
+      },
       redirect: 'if_required',
     });
 

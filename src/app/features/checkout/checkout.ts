@@ -107,11 +107,12 @@ export class Checkout implements OnInit {
 
     this.submitting.set(true);
     try {
+      const formValue = this.form.getRawValue();
       // Charge first — no point creating an order that was never paid for.
-      const charged = await this.payment().confirm();
+      const charged = await this.payment().confirm(formValue);
       if (!charged) return;
 
-      const order = toOrderDto(this.form.getRawValue(), this.cartService.cartItems, this.cartService.totalQuantity.getValue(), this.cartService.totalPrice.getValue());
+      const order = toOrderDto(formValue, this.cartService.cartItems, this.cartService.totalQuantity.getValue(), this.cartService.totalPrice.getValue());
       const { orderTrackingNumber } = await firstValueFrom(this.checkoutService.placeOrder(order));
 
       alert(`Your Order has been received.\n Order Tracking number: ${orderTrackingNumber}`);

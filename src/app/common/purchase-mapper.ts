@@ -1,3 +1,4 @@
+import { PaymentMethodCreateParams } from "@stripe/stripe-js";
 import { CartItem } from "../services/models/cart-item.model";
 import { AddressDto, CustomerDto, OrderDto, OrderItemDto, PurchaseDto } from "./purchase";
 
@@ -40,6 +41,21 @@ export function toOrderDto(formValue: any, cartItems: CartItem[], totalQuantity:
 
     return purchase;
 
+}
+
+export function createStripeBillingAddress(checkoutFormValue: any): PaymentMethodCreateParams.BillingDetails {
+    const billingAddress: PaymentMethodCreateParams.BillingDetails = {
+        email: checkoutFormValue.customer.email,
+        name: `${checkoutFormValue.customer.firstName} ${checkoutFormValue.customer.lastName}`,
+        address: {
+            line1: checkoutFormValue.billingAddress.street.trim(),
+            city: checkoutFormValue.billingAddress.city.trim(),
+            state: checkoutFormValue.billingAddress.state?.name ?? '',
+            country: checkoutFormValue.billingAddress.country?.name ?? '',
+            postal_code: checkoutFormValue.billingAddress.zipCode.trim(),
+        } 
+    }
+    return billingAddress;
 }
 
 function toAddressDto(address: any): AddressDto {
