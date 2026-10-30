@@ -36,7 +36,7 @@ export class StripePayment {
       if (!stripe) throw new Error('Stripe failed to load');
 
       const paymentIntent: PaymentInfo = {
-        amount: this.cartService.totalPrice.getValue() * 100,
+        amount: Math.round(this.cartService.totalPrice.getValue() * 100), // Convertinginto smallest unit i.e Cents for Dollars
         currency: 'USD'
       }
       const response = await this.stripeService.createPaymentIntent(paymentIntent);
