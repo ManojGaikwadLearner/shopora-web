@@ -48,7 +48,7 @@ export class CartService {
     }
 
     persistCartItems(): void {
-        this.browserStorage.write('cartItems', this.cartItems)
+        this.browserStorage.write('cartItems', this.cartItems);
     }
 
     decrementQuantity(theCartItem: CartItem): void {
@@ -85,6 +85,7 @@ export class CartService {
 
     clearCart(): void {
         this.cartItems = [];
+        this.persistCartItems();
         this.totalPrice.next(0);
         this.totalQuantity.next(0);
     }
