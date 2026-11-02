@@ -5,6 +5,8 @@ import { StripeService } from '../../services/stripe.service';
 import { PaymentInfo } from '../../services/models/payment-info.model';
 import { createStripeBillingAddress } from '../../common/purchase-mapper';
 import { PATHS } from '../../common/app-paths';
+import { BrowserStorage } from '../../core/browser-storage.service';
+import { isCustomerEmail } from '../../shared/utils/common.util';
 
 @Component({
   imports: [],
@@ -18,6 +20,7 @@ export class StripePayment {
   /** Emitted once the card is charged, so the parent can persist the order. */
   readonly paid = output<void>();
 
+  private readonly browserStorage: BrowserStorage = inject(BrowserStorage);
   private readonly stripeService = inject(StripeService);
   private readonly cartService = inject(CartService);
   private readonly mount = viewChild.required<ElementRef<HTMLDivElement>>('mount');
@@ -41,7 +44,8 @@ export class StripePayment {
 
       const paymentIntent: PaymentInfo = {
         amount: Math.round(this.cartService.totalPrice.getValue() * 100), // Convertinginto smallest unit i.e Cents for Dollars
-        currency: 'USD'
+        currency: 'USD',
+        receiptEmail: this.browserStorage.read('userEmail', '', isCustomerEmail)
       }
       const response = await this.stripeService.createPaymentIntent(paymentIntent);
 
